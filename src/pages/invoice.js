@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,15 +9,39 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, TextField } from "@mui/material";
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
 const Invoice = () => {
+  //   const [rows, setRows] = useState([]);
+
+  const [row, setRow] = useState({
+    item: "",
+    discription: "",
+    unitPrice: 0,
+    qty: 0,
+    tax: 0,
+    total: 0,
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setRow((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    if (name === "tax") {
+      setRow((prev) => ({
+        ...prev,
+        total: Number(prev.value1) + Number(prev.value2) + Number(prev.value3),
+      }));
+    }
+  };
+
+  //   useEffect(() => {
+  //     setRow((prev) => ({
+  //       ...prev,
+  //       total: Number(prev.value1) + Number(prev.value2) + Number(prev.value3),
+  //     }));
+  //   }, [row.tax]);
+
   return (
     <Box sx={{ p: 5 }}>
       <TableContainer component={Paper}>
@@ -34,25 +58,50 @@ const Invoice = () => {
           </TableHead>
           <TableBody>
             <TableRow
-              key={"Test"}
+              key="item"
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                Test
+                <TextField
+                  type="text"
+                  name="item"
+                  value={row.item}
+                  onChange={handleInputChange}
+                />
               </TableCell>
               <TableCell align="right">
-                <TextField />
+                <TextField
+                  type="text"
+                  name="discription"
+                  value={row.discription}
+                  onChange={handleInputChange}
+                />
               </TableCell>
               <TableCell align="right">
-                <TextField />
+                <TextField
+                  type="number"
+                  name="unitPrice"
+                  value={row.unitPrice}
+                  onChange={handleInputChange}
+                />
               </TableCell>
               <TableCell align="right">
-                <TextField />
+                <TextField
+                  type="number"
+                  name="qty"
+                  value={row.qty}
+                  onChange={handleInputChange}
+                />
               </TableCell>
               <TableCell align="right">
-                <TextField />
+                <TextField
+                  type="number"
+                  name="tax"
+                  value={row.tax}
+                  onChange={handleInputChange}
+                />
               </TableCell>
-              <TableCell align="right">Test</TableCell>
+              <TableCell align="right">{row.total}</TableCell>
             </TableRow>
             <TableRow
               key={"Test"}
@@ -76,7 +125,15 @@ const Invoice = () => {
           justifyContent: "center",
         }}
       >
-        <Button sx={{ marginTop: 2 }}>Add Item</Button>
+        <Button
+          disabled={false}
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            console.log(row);
+          }}
+        >
+          Add Item
+        </Button>
       </Box>
     </Box>
   );
